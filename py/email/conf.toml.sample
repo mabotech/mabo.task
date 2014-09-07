@@ -1,0 +1,32 @@
+
+[app]
+img_path = "out2"
+img_out = "mmf_%s"
+csv ="mmf2014_ok.csv"
+
+
+[image]
+
+img_file = "mmf2.jpg"
+
+title = "%s，您好！"
+title_pos = [980,110]
+
+body = "祝您中秋节快乐，合家团圆！"
+body_pos = [330,55]
+
+signature = "Majj 2014.9.6"
+signature_pos  = [70,12]
+
+[mail]
+
+mailFrom = "majj@smtp.com"
+mailBCC = "idea@smtp.com"
+
+[smtp]
+
+interval = 3
+
+host = "smtp.com"
+user = "user"
+password = "passwd"

@@ -8,7 +8,9 @@ __pycache__/
 # Distribution / packaging
 .Python
 env/
-bin/
+
+#bin/
+
 build/
 develop-eggs/
 dist/
@@ -52,3 +54,8 @@ coverage.xml
 # Sphinx documentation
 docs/_build/
 
+# bin
+*.exe
+*.toml
+*.csv
+*.ttf

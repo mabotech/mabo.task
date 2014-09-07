@@ -1,0 +1,4 @@
+
+nsqlookupd.exe
+
+pause
