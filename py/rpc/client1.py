@@ -1,7 +1,9 @@
 
-
+import socket
+import gevent
 import rpyc
 
+import time
 
 def work(c):
     
@@ -18,10 +20,12 @@ def work(c):
 def main():
     c = rpyc.connect("localhost", 18861)
 
-    for i in range(1,4):
+    for i in range(0,4):
+        gevent.sleep(0.1)
         work(c)
     c.close()
     
 if __name__ == "__main__":
-    
+    t1 = time.time()
     main()
+    print time.time() - t1
