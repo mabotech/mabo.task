@@ -64,3 +64,4 @@ docs/_build/
 *.png
 *.dat
 *.pid
+*.xlsx

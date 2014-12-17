@@ -12,34 +12,35 @@ from luigi import scheduler, worker
 
 date = luigi.DateParameter()
 
-#print(date)
+# print(date)
+
 
 class RTask(luigi.Task):
-    
+
     x = luigi.IntParameter()
-    
+
     def complete(self):
         print "RTesk"
-    
+
 
 class MyTask(luigi.Task):
+
     x = luigi.IntParameter(default=1)
     y = luigi.IntParameter(default=45)
-    
+
     def requires(self):
         return RTask(self.x)
-        
 
     def run(self):
-        gevent.sleep(1000)  
+        gevent.sleep(1000)
         print self.x
-        
+
     def output(self):
-        
+
         print "output"
-        
+
     def complete(self):
-        
+
         print self.x, self.y
         print "done"
 
