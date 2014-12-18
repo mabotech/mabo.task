@@ -18,13 +18,18 @@ def dispatch(notify):
     """ dispatch """
 
     try:
-        print "Got NOTIFY:", notify.pid, notify.channel, notify.payload
+        v = strftime("%Y-%m-%d %H:%M:%S", localtime())
+        print "%s, Got NOTIFY:%s %s %s" %(v, notify.pid, notify.channel, notify.payload )
     except:
         print "Exception"
 
 
 def listen(DSN, channels):
-    """ listen other database sessions """
+    """ listen other database sessions 
+    NOTIFY schedule, 'func.run(''abc'')'
+    NOTIFY test, 'run'
+    
+    """
 
     conn = psycopg2.connect(DSN)
 
