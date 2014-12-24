@@ -26,9 +26,9 @@ def dispatch(notify):
 
 def listen(DSN, channels):
     """ listen other database sessions 
+
     NOTIFY schedule, 'func.run(''abc'')'
-    NOTIFY test, 'run'
-    
+    NOTIFY test, 'run'    
     """
 
     conn = psycopg2.connect(DSN)
@@ -41,6 +41,7 @@ def listen(DSN, channels):
 
         curs.execute("LISTEN %s" % (channel))
 
+        # heartbeat here
         print "Waiting for notifications on channel '%s'" % (channel)
 
     while True:

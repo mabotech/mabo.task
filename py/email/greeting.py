@@ -270,7 +270,7 @@ def Signature(image, type, text, position, font=None, color=(255, 0, 0)):
 
 def gen_image(title, conf):    
    
-    fn = 'mmf2.jpg'    
+    fn = 'Christmas2015.png'    
 
     newimg = Image.open(fn) 
     
@@ -296,18 +296,19 @@ def gen_image(title, conf):
     #now = strftime('%y年%m月%d日 %H:%M',localtime())
     #now =unicode(now,'utf8')
     
-    text = conf["image"]["title"].decode('utf-8')  %(title)
+    text = conf["image"]["title"].decode('utf-8') %(title)
     
     textdraw = ImageDraw.Draw(newimg)
     textsize = textdraw.textsize(text, font=ft)
     del textdraw
     
     #print textsize
-    r = 980 - textsize[0]
+    r = 510 - textsize[0]
     #print "R:", r
-    newimg = Signature(newimg, "v", text, [r,110], ft, (255,255,255)) #560
-    newimg = Signature(newimg, "c", conf["image"]["body"].decode('utf-8'), [330,55], ft, (255,255,255)) #560
-    newimg = Signature(newimg, "c", conf["image"]["signature"].decode('utf-8'), [70,12], ft, (255,255,255)) #560
+    newimg = Signature(newimg, "v", text, [r,180], ft, (255,255,255)) #560
+    newimg = Signature(newimg, "c", conf["image"]["body"].decode('utf-8'), [10,120], ft, (255,255,255)) #560
+    newimg = Signature(newimg, "c", conf["image"]["signature"].decode('utf-8'), [40,42], ft, (255,255,255)) #560
+    newimg = Signature(newimg, "c", conf["image"]["date"].decode('utf-8'), [30,12], ft, (255,255,255)) #560
     #(image, radius, line_width, line_color, opacity=1.0)
     
     #newimg = RoundCorner(newimg, 15)
@@ -324,7 +325,7 @@ def gen_image(title, conf):
     
     t = m.hexdigest()
     #.digest()
-    out = "out2\\mmf_%s.png" %(t)
+    out = "out\\mmf_%s.png" %(t)
     newimg.save(out) #815060
     return out
 
