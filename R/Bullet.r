@@ -75,4 +75,4 @@ incidents.pct <- data.frame(
 )
 
 incidents.pct.bg <- bullet.graph(incidents.pct)
-ggsave("bullet02.png", incidents.pct.bg, width=6, height=3)
+ggsave("output/bullet02.png", incidents.pct.bg, width=6, height=3)
