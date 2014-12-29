@@ -342,5 +342,5 @@ if __name__ == '__main__':
         
         conf = toml.loads(conf_fh.read())
         
-    print gen_image(u"Happy", conf)
+    print gen_image(u"Arial", conf)
     #print gen_image(u"王总", conf)

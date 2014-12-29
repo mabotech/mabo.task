@@ -65,6 +65,9 @@ docs/_build/
 *.pid
 *.xlsx
 
+# R
+*.Rout
+
 # mail
 out
 *.toml
