@@ -35,7 +35,7 @@ bullet.graph <- function(bg.data){
   mid.bg <- max.bg / 2
 
   gg <- ggplot(bg.data) 
-  gg <- gg + geom_bar(aes(measure, high),  fill="goldenrod2", stat="identity", width=0.5, alpha=0.2) 
+  gg <- gg + geom_bar(aes(measure, high),  fill=c("red","blue","goldenrod2","blue"), stat="identity", width=0.5, alpha=0.2) 
   gg <- gg + geom_bar(aes(measure, mean),  fill="goldenrod3", stat="identity", width=0.5, alpha=0.2) 
   gg <- gg + geom_bar(aes(measure, low),   fill="goldenrod4", stat="identity", width=0.5, alpha=0.2) 
   gg <- gg + geom_bar(aes(measure, value), fill="black",  stat="identity", width=0.2) 
@@ -43,7 +43,7 @@ bullet.graph <- function(bg.data){
   gg <- gg + geom_point(aes(measure, target), colour="red", size=2.5) 
   gg <- gg + scale_y_continuous(breaks=seq(0,100,10))
   gg <- gg + coord_flip() + ggtitle("子弹图")
-  gg <- gg + theme(axis.text.x=element_text(size=5),
+  gg <- gg + theme(axis.text.x=element_text(size=6),
                    axis.title.x=element_blank(),
                    axis.line.y=element_blank(), 
                    axis.text.y=element_text(hjust=1, color="black"), 
@@ -66,12 +66,12 @@ bullet.graph <- function(bg.data){
 # can change it up to fit your dashboard needs
 
 incidents.pct <- data.frame(
-  measure=c("设备可用性 (%)", "设备利用效率 (%)", "设备完好率 (%)", "任务完成率 (%)","其他(%)"),
-  high=c(100,100,100,100,100),
-  mean=c(45,40,50,30,40),
-  low=c(25,20,10,5,9), 
-  target=c(55,40,45,35,39),
-  value=c(50,45,60,25,44)
+  measure=c("设备可用性 (%)", "设备利用效率 (%)", "设备完好率 (%)", "任务完成率 (%)"),
+  high=c(100,100,100,100),
+  mean=c(45,40,50,30),
+  low=c(25,20,10,5), 
+  target=c(55,40,45,35),
+  value=c(50,45,60,25)
 )
 
 incidents.pct.bg <- bullet.graph(incidents.pct)

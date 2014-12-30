@@ -26,16 +26,26 @@ downtime <- function(){
 
 
     ggplot(DF1, aes(x = ID, y = value, fill = variable )) +   #, fill = variable 
-            ylab("时长百分比(%)") +
-            ggtitle(iconv("月停线时间","UTF-8","UTF-8")) + #iconv
+            
             geom_bar(stat = "identity", width=0.7,  alpha=0.7,   position="fill")   +
+            
+            ggtitle(iconv("月停线时间","UTF-8","UTF-8")) + #iconv
+            theme(plot.title = element_text(lineheight=3, face="bold", color="black", size=12) )+           
+            
             scale_x_continuous(breaks=DF1$ID, labels= DF1$Equipment)  +
             #scale_y_continuous(breaks=DF1$value) +
+            ylab("时长百分比(%)") +
             scale_y_continuous(labels = percent) + 
-             scale_fill_manual(values=c("#FF4136", "#2ECC40", "#FFDC00"),  guide = guide_legend(title = "分类"))  +
-            theme(axis.text.x = element_text(angle=90, vjust=0.1, size=7)) 
+            
+            scale_fill_manual(values=c("#FF4136", "#2ECC40", "#FFDC00"), 
+                        guide = guide_legend(title = "图例"))  +
+            theme(axis.text.x = element_text(angle=30, vjust=0.1, size=7),
+                    axis.title.x=element_blank(),
+                    axis.text.y = element_text(size=7),
+                    axis.title.y = element_text(size=10)
+                    ) 
       
-    ggsave("output/downtime.png",width=7, height=5)
+    ggsave("output/downtime.png",width=6, height=3)
 
 }
 

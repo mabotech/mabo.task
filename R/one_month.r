@@ -1,3 +1,27 @@
+
+Sys.setlocale("LC_ALL", "C")
+
+#library(reshape2)
+library(ggplot2)
+
+monthly_stats <- function(DF) {
+
+    #print(DF)
+    #DF1 <- melt(DF, id.var="Date")
+
+    #print(DF1)
+    ggplot(DF, aes(x = Date, y = F2)) + 
+            ylab("效率(%)") +
+            ggtitle(iconv("月运行情况","UTF-8","UTF-8")) + #iconv
+            geom_bar(stat = "identity", alpha=0.9, fill="#2ECC40", position="dodge") +
+            scale_x_continuous(breaks=DF$Date, labels=DF$DateString) +  
+            theme(axis.text.x = element_text(angle=90, vjust=0.1, size=6))
+
+    ggsave("output/monthly_stats.png",width=6, height=4)
+    
+}
+
+
 DF <- read.table(text="Date    DateString    F1     F2     F3
 1    2014-12-1    0    41    59
 2    2014-12-2    1    59    62
@@ -31,19 +55,4 @@ DF <- read.table(text="Date    DateString    F1     F2     F3
 30    2014-12-30    1    76    91
 31    2014-12-31    2    97    94", header=TRUE)
 
-#print(DF)
-
-library(reshape2)
-DF1 <- melt(DF, id.var="Date")
-
-#print(DF1)
-
-library(ggplot2)
-ggplot(DF, aes(x = Date, y = F2)) + 
-        ylab("Info") +
-        ggtitle(iconv("月运行情况","UTF-8","UTF-8")) + #iconv
-        geom_bar(stat = "identity", alpha=0.9, fill="#2ECC40", position="dodge") +
-        scale_x_continuous(breaks=DF$Date, labels=DF$DateString) +  
-        theme(axis.text.x = element_text(angle=90, vjust=0.1, size=6))
-  
-  ggsave("test2.png",width=5, height=3)
+monthly_stats(DF)
