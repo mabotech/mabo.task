@@ -25,7 +25,7 @@ downtime <- function(){
 
 
 
-    ggplot(DF1, aes(x = ID, y = value, fill = variable )) +   #, fill = variable 
+    plt <- ggplot(DF1, aes(x = ID, y = value, fill = variable )) +   #, fill = variable 
             
             geom_bar(stat = "identity", width=0.7,  alpha=0.7,   position="fill")   +
             

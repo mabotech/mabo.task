@@ -16,7 +16,7 @@ area <- function(){
 
     print(df)
 
-    ggplot(df, aes(x = VisitWeek, y = MyMetric)) +
+    plt <- ggplot(df, aes(x = VisitWeek, y = MyMetric)) +
             geom_area(aes(fill = factor(ThingAge)), alpha=0.7,  position = "fill") +
             #scale_x_continuous(breaks=df$VisitWeek, labels= df$VisitWeek)  +
             xlab("日期") +

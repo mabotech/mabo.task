@@ -10,7 +10,7 @@ monthly_stats <- function(DF) {
     #DF1 <- melt(DF, id.var="Date")
 
     #print(DF1)
-    ggplot(DF, aes(x = Date, y = F2)) + 
+    plt <- ggplot(DF, aes(x = Date, y = F2)) + 
             ylab("效率(%)") +
             ggtitle(iconv("月运行情况","UTF-8","UTF-8")) + #iconv
             geom_bar(stat = "identity", alpha=0.9, fill="#2ECC40", position="dodge") +
