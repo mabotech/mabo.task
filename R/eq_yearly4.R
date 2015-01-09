@@ -3,9 +3,11 @@
 library(ggplot2)
 #library(sysfonts)
 
+library(reshape2)
+
 Sys.setlocale("LC_ALL", "C")
 
-all_yearly <- function(d){
+all_yearly <- function(DF){
 
     #Sys.getlocale()
     #Sys.setlocale("LC_ALL","Chinese")
@@ -16,33 +18,34 @@ all_yearly <- function(d){
 
     #Encoding("中文") 
 
-    print(d)
-
-    plt <- ggplot(data = d, mapping=aes(x=a,y=b)) +
+    #print(DF)
     
-        geom_point(color="#FF851B",shape=0) + 
-        geom_line(colour="#FF851B") + 
+    DF1 <- melt(DF, id.var= "month" )
+    #levels()
+    print(DF1)
+
+    plt <- ggplot(data = DF1,  aes(x=month,y = value  , color=variable)) +
+    
+        geom_point(aes(shape = factor(variable))) + 
+        geom_line( ) + 
         
-        geom_point(aes(x=a,y=d), color="#0074D9",shape=4) + 
-        geom_line(aes(x=a,y=d), colour="#0074D9") + 
-        
-        geom_point(aes(x=a,y=h), color="#2ECC40",shape=8) + 
-        geom_line(aes(x=a,y=h), colour="#2ECC40") + 
-        
-          geom_point(aes(x=a,y=n), color="#FFDC00",shape=10) + 
-         geom_line(aes(x=a,y=n), colour="#FFDC00") +
+
         
         #geom_bar(stat="identity") +
         xlab("月份") +
         #intToUtf8(c(20013, 25990))
-        scale_x_continuous(breaks=c(1:12), labels=d$e) + 
+        scale_x_continuous(breaks=c(1:12), #labels=DF1$monthText) + 
+        labels = c('Jan\n一月', 'Feb', 'Mar', 'Apr', 'May', 'Jun\n六月', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec\n十二月')) +
         #c('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec')) +
         #scale_x_continuous("月份\n2014") +
         ylab("利用率 (%)") +
         # ylab(intToUtf8(c(20013, 25991))) +
         ylim(c(0,150)) +
         
-
+            scale_color_manual(values=c("#2A9836", "#BC372F","#BCA409","red"), labels=c("重鼓","耐久","环境","高温"),
+                        guide = guide_legend(title = "试验室"))  +
+                        
+                        
            theme(axis.text.x = element_text(vjust=0.1, size=10,   color="#BBBFC2"), #angle=90, 
             
                axis.title.x=element_blank(),
@@ -63,15 +66,15 @@ all_yearly <- function(d){
             
        # ggtitle(iconv("2014年设备利用情况","UTF-8","UTF-8")); #iconv
     #plt = plt +  guides(fill = guide_legend(title = "LEFT", title.position = "left"))
-    ggsave(file="output/yearly_201412_1.png", width=7, height=3)
+    ggsave(file="output/yearly_201412_4.png", width=7, height=3)
 
 }
 
-all_yearly_data <- data.frame(a=c(1:12),  b =130 - abs(25* sin(c(1:12))),  
-                                             d =50 + abs(15* sin(c(1:12))),  
-                                              h =3*c(17:28) + abs(8* cos(c(1:12))), 
-                                              n =60 + abs(24* sin(c(4:15))), 
-                                            c1=c(rep(c("Odd","Even"),times=6)),  
-                                            e=c('Jan\n一月', 'Feb', 'Mar', 'Apr', 'May', 'Jun\n六月', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec\n十二月'))
+all_yearly_data <- data.frame(month=c(1:12),  r1 =130 - abs(25* sin(c(1:12))),  
+                                             r2 =50 + abs(15* sin(c(1:12))),  
+                                              r3 =3*c(17:28) + abs(8* cos(c(1:12))), 
+                                              r4 =60 + abs(24* sin(c(4:15))) )
+                                            #c1=c(rep(c("Odd","Even"),times=6)),  
+                                            #monthText=c('Jan\n一月', 'Feb', 'Mar', 'Apr', 'May', 'Jun\n六月', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec\n十二月'))
 
 all_yearly(all_yearly_data)

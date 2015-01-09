@@ -3,9 +3,11 @@
 library(ggplot2)
 #library(sysfonts)
 
+library(reshape2)
+
 Sys.setlocale("LC_ALL", "C")
 
-all_yearly <- function(d){
+all_yearly <- function(DF){
 
     #Sys.getlocale()
     #Sys.setlocale("LC_ALL","Chinese")
@@ -16,26 +18,30 @@ all_yearly <- function(d){
 
     #Encoding("中文") 
 
-    print(d)
+    print(DF)
+    
+    DF1 <- melt(DF, id.var=c("month","monthText"))
+    #levels()
+    print(DF1)
 
-    plt <- ggplot(data = d, mapping=aes(x=a,y=b)) +
+    plt <- ggplot(data = DF, mapping=aes(x=month,y=b)) +
     
         geom_point(color="#FF851B",shape=0) + 
         geom_line(colour="#FF851B") + 
         
-        geom_point(aes(x=a,y=d), color="#0074D9",shape=4) + 
-        geom_line(aes(x=a,y=d), colour="#0074D9") + 
+        geom_point(aes(x=month,y=d), color="#0074D9",shape=4) + 
+        geom_line(aes(x=month,y=d), colour="#0074D9") + 
         
-        geom_point(aes(x=a,y=h), color="#2ECC40",shape=8) + 
-        geom_line(aes(x=a,y=h), colour="#2ECC40") + 
+        geom_point(aes(x=month,y=h), color="#2ECC40",shape=8) + 
+        geom_line(aes(x=month,y=h), colour="#2ECC40") + 
         
-          geom_point(aes(x=a,y=n), color="#FFDC00",shape=10) + 
-         geom_line(aes(x=a,y=n), colour="#FFDC00") +
+          geom_point(aes(x=month,y=n), color="#FFDC00",shape=10) + 
+         geom_line(aes(x=month,y=n), colour="#FFDC00") +
         
         #geom_bar(stat="identity") +
         xlab("月份") +
         #intToUtf8(c(20013, 25990))
-        scale_x_continuous(breaks=c(1:12), labels=d$e) + 
+        scale_x_continuous(breaks=c(1:12), labels=DF$monthText) + 
         #c('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec')) +
         #scale_x_continuous("月份\n2014") +
         ylab("利用率 (%)") +
@@ -67,11 +73,11 @@ all_yearly <- function(d){
 
 }
 
-all_yearly_data <- data.frame(a=c(1:12),  b =130 - abs(25* sin(c(1:12))),  
+all_yearly_data <- data.frame(month=c(1:12),  b =130 - abs(25* sin(c(1:12))),  
                                              d =50 + abs(15* sin(c(1:12))),  
                                               h =3*c(17:28) + abs(8* cos(c(1:12))), 
                                               n =60 + abs(24* sin(c(4:15))), 
-                                            c1=c(rep(c("Odd","Even"),times=6)),  
-                                            e=c('Jan\n一月', 'Feb', 'Mar', 'Apr', 'May', 'Jun\n六月', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec\n十二月'))
+                                            #c1=c(rep(c("Odd","Even"),times=6)),  
+                                            monthText=c('Jan\n一月', 'Feb', 'Mar', 'Apr', 'May', 'Jun\n六月', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec\n十二月'))
 
 all_yearly(all_yearly_data)

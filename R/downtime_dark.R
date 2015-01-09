@@ -39,8 +39,8 @@ downtime <- function(){
             ylab("时长百分比(%)") +
             scale_y_continuous(labels = percent) + 
             
-            scale_fill_manual(values=c("#FF4136", "#2ECC40", "#FFDC00"), 
-                        guide = guide_legend(title = "图例"))  +
+            scale_fill_manual(values=c("#2A9836", "#BC372F","#BCA409"), 
+                        guide = guide_legend(title = "类型"))  +
             scale_alpha_manual(values = c(0.2,0.2, 0.2))+
            
             theme(axis.text.x = element_text(angle=30, vjust=0.1, size=7, color="#BBBFC2"),
@@ -57,7 +57,7 @@ downtime <- function(){
                     plot.background=element_rect(fill = "#1F1F1F", color = "#1F1F1F")
                     ) 
       
-    ggsave("output/downtime1.png",width=6, height=2.5)
+    ggsave("output/downtime3.png",width=6, height=2.5)
 
 }
 
