@@ -81,7 +81,7 @@ def listen(DSN, channels):
         else:
             conn.poll()
             while conn.notifies:
-                notify = conn.notifies.pop()
+                notify = conn.notifies.pop(0) #default -1
                 #curs.execute("notify test,'abc'")
                 #print notify.pid
                 #dispatch(notify)
