@@ -3,6 +3,9 @@
 """
 IAMService
 """
+
+import os, sys
+
 import time
 import json
 
@@ -10,7 +13,7 @@ import xml.sax.saxutils as saxutils
 
 # post xml soap message
 
-import sys, httplib
+import httplib
 
 import requests
 
@@ -21,14 +24,16 @@ from cStringIO import StringIO
 
 import toml
 
-conf_fn = "config.toml"
+conf_fn = os.sep.join([os.path.split(os.path.realpath(__file__))[0],"config.toml"])
+
+print conf_fn
 
 with open(conf_fn) as conf_fh:
 
     conf = toml.loads(conf_fh.read())["app"]
     
 
-print(conf)
+#print(conf)
 
 #exit(0)
 
@@ -83,7 +88,7 @@ class IAMClient(object):
         #construct and send the header
         
         host =conf["HOST"]
-        print(host)
+        #print(host)
         webservice = httplib.HTTP(host)
         
         service = conf["Service2"]
@@ -103,7 +108,7 @@ class IAMClient(object):
         # get the response
 
         statuscode, statusmessage, header = webservice.getreply()
-        print "Response: ", statuscode, statusmessage, startPage
+        #print "Response: ", statuscode, statusmessage, startPage
         #print "headers: ", header
         #print dir(webservice)
         res = webservice.getfile().read()
@@ -136,7 +141,7 @@ class IAMClient(object):
         
     def getResult(self, xmlstr):
         
-        print xmlstr
+        #print xmlstr
         
         resp = self.getResponse(xmlstr)
         
@@ -199,7 +204,7 @@ def post(data):
     
     #print  r.headers
     
-    print r.text.encode("utf8")
+    #print r.text.encode("utf8")
     #v = json.loads(r.text)
         
 def get_info(xmlstr):
@@ -261,7 +266,7 @@ def get_info(xmlstr):
             post(data)
     
 
-def sync_account():
+def sync_account(**kv):
     
     
     
