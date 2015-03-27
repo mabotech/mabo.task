@@ -1,4 +1,7 @@
 
+"""
+server side redis listener.
+"""
 
 import redis
 import threading
@@ -15,11 +18,21 @@ now = time.time()
 
 TIMEOUT = 3
 
+
+def post(data):
+    """   """
+    pass
+    
+
 def callback():
   
   sub = r.pubsub()
-  sub.subscribe('clock')
-  sub.subscribe('abc')
+  
+  channels = ['clock','abc']
+  
+  for channle in channels:
+      
+    sub.subscribe(channel)
   
   while True:
       
@@ -33,17 +46,28 @@ def callback():
           print "channel: %s" %(m["channel"])
       #print m["data"]
  
-def zerg_rush(n):
-  for x in range(n):
+def new_thread():
+    """   """
+    
     t = threading.Thread(target=callback)
     t.setDaemon(True)
     t.start()
  
 def heartbeat():
+    """   """
     print "heartbeat"
     
+def timeout():
+    """ 
+    heartbeat  
+    timeout_count
+    """
+    
+    print "timeout"
+    
 def main():
-
+    """    """
+    
     global now
 
     t = threading.Thread(target=callback)
@@ -57,7 +81,7 @@ def main():
         
         if t2-now >= TIMEOUT:
             #print "timeout"
-            heartbeat()
+            timeout()
             pass
             
         now = t2
@@ -65,4 +89,7 @@ def main():
         #r.publish("clock","val")
  
 if __name__ == '__main__':
-  main()
+    
+    main()
+    
+    

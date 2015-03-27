@@ -71,4 +71,5 @@ docs/_build/
 # mail
 out
 *.toml
+*.xml
 *.csv

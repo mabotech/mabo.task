@@ -7,6 +7,8 @@ Psycopg allows asynchronous interaction with **other database sessions**
 
 """
 
+import toml
+
 import select
 import psycopg2
 import psycopg2.extensions
@@ -51,13 +53,17 @@ def listen(DSN, channels):
             conn.poll()
             while conn.notifies:
                 notify = conn.notifies.pop()
+                #curs.execute("notify test,'abc'")
                 dispatch(notify)
 
 
 def main():
     """ main """
+    
+    with open("config.toml") as conffile:
+        config = toml.loads(conffile.read())
 
-    DSN = "dbname=maboss user=mabotech password=mabouser port=6432"
+    DSN = config['app']['DSN']
     
     """
     NOTIFY channel [ , payload ]   
@@ -65,15 +71,13 @@ def main():
     notify test, 'abc1';
     notify test, 'abc2';
     notify test, 'abc3';
-    x
+
     2015-03-15 10:06:57, Got NOTIFY:9596 test abc3
     2015-03-15 10:06:57, Got NOTIFY:9596 test abc2
     2015-03-15 10:06:57, Got NOTIFY:9596 test abc1
-
     """
    
-    channels = ["schedule", "test"]
-
+    channels = config['app']['channels']
 
     listen(DSN, channels)
 
