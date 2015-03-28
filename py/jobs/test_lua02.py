@@ -13,7 +13,7 @@ db = redis.Redis(host="127.0.0.1", port=6389, db=0)
 
 def main():
 
-    with open("test02.lua","r") as fileh:
+    with open("update.lua","r") as fileh:
         
         lua_script = fileh.read()
         
