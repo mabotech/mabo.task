@@ -200,7 +200,7 @@ def post(data):
     #headers = {'Accept':'json'}
     payload = json.dumps(payload)
 
-    r = requests.post(URL, data = payload , headers=HEADERS)
+    resp = requests.post(URL, data = payload , headers=HEADERS)
     
     #print  r.headers
     

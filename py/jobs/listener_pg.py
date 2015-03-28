@@ -56,7 +56,7 @@ def dispatch(notify):
         # notify.channel
         func, args = notify.payload.split("<-")
         
-        print func, args
+        #print func, args
         
         etc.write("/dispatch/%s" %(func), 1, ttl = 60 )
         
