@@ -32,7 +32,7 @@ def set(key, i):
     
     timestamp = 1000 * time.time()
     
-    val = random.randint(3,6)
+    val = random.randint(1,4)
 
     v = db.evalsha(sha,  1, key, val, timestamp)
 
