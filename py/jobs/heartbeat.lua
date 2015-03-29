@@ -1,9 +1,11 @@
 
-local time = redis.call("HGET", KEYS[1], "time") 
- 
-if ARGV[1] - ARGV[2] - time < 0 then
+local heartbeat = redis.call("HGET", KEYS[1], "heartbeat") 
+if heartbeat == false then
+    heartbeat = ARGV[1] 
+end
+if ARGV[1] - ARGV[2] - heartbeat < 0 then
     -- heartbeat is OK
-    return "On"
+    return  "On"
 
 else
     -- heartbeat timeout
@@ -13,10 +15,21 @@ else
     if off == "0" then
         
         -- first time timeout
+        local val = redis.call("HGET", KEYS[1], "val") 
         
-        local msg = cmsgpack.pack( {id=KEYS[1], api=0, time=time, time_precision="ms"} )
+        local starton = redis.call("HGET", KEYS[1], "starton") 
+        
+        local msg = cmsgpack.pack( 
+            {id=KEYS[1], pstatus=val, 
+            duration = heartbeat - starton,  
+            ch_ori_eqpt=0, heartbeat=heartbeat, 
+            time_precision="ms"} )
         
         redis.call("HSET", KEYS[1],"off",1)
+        
+        redis.call("HSET", KEYS[1],"val",0)  
+        redis.call("HSET", KEYS[1],"starton",heartbeat)        
+        --redis.call("HSET", KEYS[1],"time",ARGV[2])        
         
         redis.call("LPUSH", "data_queue", msg) -- msg queue
         

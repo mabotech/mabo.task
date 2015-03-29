@@ -53,6 +53,11 @@ sha = db.script_load(lua_script)
 
 # print sha
 
+def strict_time():
+    if sys.platform == "win32":
+        return time.clock()
+    else:
+        return time.time()
 
 def post(data):
 
@@ -80,7 +85,7 @@ def post(data):
         'User-Agent': 'mabo'}
 
     payload = json.dumps(payload)
-
+    
     resp = requests.post(URL, data=payload, headers=HEADERS)
 
     s = resp.text  # .encode("utf8")
@@ -119,10 +124,10 @@ def callback():
 
                         print data
 
-                        del data["time"]
-                        del data["time_precision"]
+                        #del data["heartbeat"]
+                        #del data["time_precision"]
 
-                        # print data
+                        data = {"id":data["id"], "ch_ori_eqpt":data["ch_ori_eqpt"]}
                         post(data)
 
                     except Exception as ex:
@@ -159,6 +164,8 @@ def check_heartbeat():
     for key in collectors:
 
         status = db.evalsha(sha, 1, key, now, 1000 * conf["SLEEP"])
+        
+        print status
 
         if status == "On":
 

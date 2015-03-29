@@ -1,41 +1,61 @@
 
+import os, sys
 
 import time
-
 import redis
-
 import random
 
+import socket
+import gevent
+from gevent.pool import Pool
+from gevent import monkey
 
-
+monkey.patch_all()
 
 db = redis.Redis(host="127.0.0.1", port=6389, db=0)
 
+with open("update.lua","r") as fileh:
+    
+    lua_script = fileh.read()
+    
+    
+sha = db.script_load(lua_script)
+    
+    
+def strict_time():
+    if sys.platform == "win32":
+        return time.clock()
+    else:
+        return time.time()
+
+def set(key, i):
+    
+    timestamp = 1000 * time.time()
+    
+    val = random.randint(3,6)
+
+    v = db.evalsha(sha,  1, key, val, timestamp)
+
+    print "[%s] %s,%s" %(i, val, v)
+    
 def main():
 
-    with open("update.lua","r") as fileh:
-        
-        lua_script = fileh.read()
-        
-        
-    sha = db.script_load(lua_script)
+
+    print sha  
+
+
+    keys = ["1","2","3"]
     
-    print sha
-
+    pool = Pool(10)
     
-
-
-    key = "1"
-
+    i = 0
+    
     while True:
+        i = i +1
+        for key in keys:
+            pool.spawn(set, key, i)
         
-        timestamp = 1000 * time.time()
-        
-        val = random.randint(3,6)
-
-        v = db.evalsha(sha,  1, key,   val, timestamp)
-
-        print val, v
+        #set(key)
 
         time.sleep(2)
         
