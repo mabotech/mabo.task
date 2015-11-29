@@ -7,7 +7,7 @@ library(reshape2)
 
 Sys.setlocale("LC_ALL", "C")
 
-all_yearly <- function(DF){
+all_yearly <- function(DF1){
 
     #Sys.getlocale()
     #Sys.setlocale("LC_ALL","Chinese")
@@ -19,10 +19,13 @@ all_yearly <- function(DF){
     #Encoding("中文") 
 
     #print(DF)
-    
-    DF1 <- melt(DF, id.var= "month" )
+     #print(DF)
+     
+    #DF1 <- melt(DF, id.var= "month" )
     #levels()
+    
     print(DF1)
+   
 
     plt <- ggplot(data = DF1,  aes(x=month,y = value  , color=variable)) +
     
@@ -66,15 +69,10 @@ all_yearly <- function(DF){
             
        # ggtitle(iconv("2014年设备利用情况","UTF-8","UTF-8")); #iconv
     #plt = plt +  guides(fill = guide_legend(title = "LEFT", title.position = "left"))
-    ggsave(file="output/yearly_201412_4.png", width=7, height=3)
+    ggsave(file="output/report_yearly.png", width=7, height=3)
 
 }
 
-all_yearly_data <- data.frame(month=c(1:12),  r1 =130 - abs(25* sin(c(1:12))),  
-                                             r2 =50 + abs(15* sin(c(1:12))),  
-                                              r3 =3*c(17:28) + abs(8* cos(c(1:12))), 
-                                              r4 =60 + abs(24* sin(c(4:15))) )
-                                            #c1=c(rep(c("Odd","Even"),times=6)),  
-                                            #monthText=c('Jan\n一月', 'Feb', 'Mar', 'Apr', 'May', 'Jun\n六月', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec\n十二月'))
-
-all_yearly(all_yearly_data)
+ DF <- read.table("yearlyU.csv", sep=",",  quote="\"", header=TRUE)
+DF.value = 100 * DF$value
+all_yearly(DF)

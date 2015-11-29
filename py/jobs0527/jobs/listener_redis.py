@@ -9,12 +9,12 @@ server side redis listener.
 import os
 import sys
 
-import json
+
 import toml
 
 import msgpack
 
-import requests
+
 
 import redis
 import threading
@@ -29,11 +29,17 @@ from gevent import monkey
 
 monkey.patch_all()
 
+from utils.ws_post import post
+from multi_logging import get_logger
 
-conf_fn = os.sep.join(
-    [os.path.split(os.path.realpath(__file__))[0], "listener.toml"])
+
+
+#conf_fn = os.sep.join(
+#    [os.path.split(os.path.realpath(__file__))[0], "listener.toml"])
 
 # print conf_fn
+
+conf_fn = "config/listener_redis.toml"
 
 with open(conf_fn) as conf_fh:
 
@@ -41,18 +47,37 @@ with open(conf_fn) as conf_fh:
 
     conf = cfg["redis"]
     etcd_cfg = cfg["etcd"]
+    
+## 
 
+with open(conf["logging_config"], "r") as fh:
+    
+    json_str = fh.read() 
+
+conf_json = json.loads(json_str)
+
+logger = get_logger(conf["log_base"], conf["app_name"], conf_json)
+
+logger.debug(conf)
+
+## 
+
+# " ""
 db = redis.client.StrictRedis(
     host=conf["HOST"],
     port=conf["PORT"],
     db=conf["DB"])
+# " ""
+
+## pool
+#db = 
 
 etc = etcd.Client(host=etcd_cfg["HOST"], port=etcd_cfg["PORT"])
 
 
 lua_file = conf["HEARTBEAT_LUA"]
 
-print lua_file
+#print lua_file
 
 with open(lua_file, "r") as fileh:
 
@@ -69,41 +94,7 @@ def strict_time():
     else:
         return time.time()
 
-def post(data):
 
-    print data
-
-    URL = conf["JSONRPC"]
-
-    payload = {
-        "jsonrpc": "2.0",
-        "id": "r2",
-        "method": "call",
-        "params": {
-            "method": conf["METHOD"],
-            "table": conf["TABLE"],
-            "pkey": conf["PKEY"],
-            "columns": data,
-            "context": {
-                "user": "mt",
-                "languageid": "1033",
-                "sessionid": "123"}}}
-
-    HEADERS = {
-        'content-type': 'application/json',
-        'accept': 'json',
-        'User-Agent': 'mabo'}
-
-    payload = json.dumps(payload)
-    
-    resp = requests.post(URL, data=payload, headers=HEADERS)
-
-    s = resp.text  # .encode("utf8")
-
-    v = json.loads(s)
-
-    if "error" in v:
-        print s.encode("utf8")
 
 
 def callback():
@@ -124,24 +115,35 @@ def callback():
             if msg["type"] == 'message':
 
                 queue_len = db.llen("data_queue")
-
+                print queue_len
                 for i in xrange(0, queue_len):
                     v = db.lpop("data_queue")
-                    data = msgpack.unpackb(v)
+                    print v
+                    if v != None:
+                        data = msgpack.unpackb(v)
+                    else:
+                        continue
                     # print queue_len, data
 
                     try:
 
-                        print data
+                        #print data
 
                         #del data["heartbeat"]
                         #del data["time_precision"]
+                        
+                        if "ch_occupied" in data:
 
-                        data = {"id":data["id"], "ch_ori_eqpt":data["ch_ori_eqpt"]}
+                            data = {"id":data["id"], "ch_occupied":data["ch_occupied"]}
+                            
+                        else:
+                            data = {"id":data["id"], "ch_ori_eqpt":data["ch_ori_eqpt"]}
+                        
                         post(data)
 
                     except Exception as ex:
-                        print "post data exception:", ex
+                        #print "post data exception:", ex
+                        pass
             else:
                 # print "channel: %s" %(m["channel"])
                 pass
@@ -156,11 +158,9 @@ def new_thread():
 
     t.start()
 
-def etcd_write(key):
-    
-    etc.write("/heartbeat/%s" % (key), 1, ttl=conf["SLEEP"])
-    
-    pass
+def etcd_write(key, value):
+
+    etc.write("/heartbeat/%s" % (key), value, ttl=conf["SLEEP"])
     
 def check_heartbeat():
     """ 
@@ -181,30 +181,37 @@ def check_heartbeat():
 
     for key in collectors:
         
-        print now
-        print 1000 * conf["SLEEP"]
-        # 
+        #print now
+        #print 1000 * conf["SLEEP"]
+        
         status = db.evalsha(sha, 1, key, now, 1000 * conf["SLEEP"])
         
-        print "%s heartbeat: %s" % (key, status)
+        logger.debug( "%s heartbeat: %s" % (key, status) )
 
         if status == "On":
             
-            etcd_write(key)
+            etcd_write(key, status)
             #etc.write("/heartbeat/%s" % (key), 1, ttl=conf["SLEEP"])
 
+#
 
 def main():
-    """ main """
-
+    """ main loop """
+    
     new_thread()
 
     pool = Pool(conf["POOL_SIZE"])
 
     while True:
-
-        pool.spawn(check_heartbeat)
-        #print "1"
+        
+        try:
+        
+            pool.spawn(check_heartbeat)
+            
+        except Exception as ex:
+            
+            logger.error(ex)
+            
         gevent.sleep(conf["SLEEP"])
 
 

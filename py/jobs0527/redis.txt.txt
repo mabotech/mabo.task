@@ -1,0 +1,29 @@
+redis 127.0.0.1:6379[1]> hgetall eqm007_camera
+ 1) "heartbeat"
+ 2) "1435113470277.0"
+ 3) "off"
+ 4) "0"
+ 5) "val"
+ 6) "1"
+ 7) "starton"
+ 8) "1435030187643.0"
+ 9) "rawdata"
+10) "eqm007"
+11) "post"
+12) "1"
+
+
+
+---
+
+redis 127.0.0.1:6379[1]> hgetall eqm007
+ 1) "val"
+ 2) "0"
+ 3) "starton"
+ 4) "1435048711154.0"
+ 5) "heartbeat"
+ 6) "1435049497347.0"
+ 7) "rawdata"
+ 8) "SMAN STBY SLIM SVOR SBEI N/A "
+ 9) "off"
+10) "1"

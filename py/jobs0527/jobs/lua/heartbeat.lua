@@ -1,9 +1,22 @@
+--[[
+
+-- ARGV[1]
+-- ARGV[2] 
+
+]]
 
 local heartbeat = redis.call("HGET", KEYS[1], "heartbeat") 
+
 if heartbeat == false then
     heartbeat = ARGV[1] 
 end
-if ARGV[1] - ARGV[2] - heartbeat < 0 then
+-- now - sleep - lastheartbeat
+
+if ARGV[1] - heartbeat == 0 then
+    -- can't find the key for the heartbeat of this equipment ('heartbeat == false)
+    return "Off"
+    
+elseif ARGV[1] - ARGV[2] - heartbeat < 0 then
     -- heartbeat is OK
     return  "On"
 
@@ -36,7 +49,7 @@ else
         redis.call("PUBLISH", "new_data", "new") -- notice
         
     end
-    
-    return "Off"
+    return ARGV[1] - ARGV[2] - heartbeat
+    -- return "Off"
 end
  
